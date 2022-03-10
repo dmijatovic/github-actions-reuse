@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  hello-1:
+  hello-2:
     name: echo hello world 2
     uses: ./.github/workflows/reusable-hello.yml
     with:

@@ -23,6 +23,10 @@ jobs:
   say-hello:
     name: say hello
     runs-on: ubuntu-latest
+    # this shared action produces output to be consumed by users
+    outputs:
+      hello_to_name: ${{steps.hello_to.outputs.greet}}
+      image_tag_used: ${{steps.return_tag.outputs.image_tag_used}}
     steps:
       - name: checkout
         # https://github.com/actions/checkout
@@ -32,8 +36,10 @@ jobs:
           fetch-depth: 0
 
       - name: say hello to name
+        id: hello_to
         run: |
           echo hello ${{inputs.name}}
+          echo "::set-output name=greet::hello ${{inputs.name}}"
 
       - name: contruct image tag
         run: |
@@ -45,8 +51,10 @@ jobs:
           fi
 
       - name: echo image_tag from previous step
+        id: return_tag
         run: |
           echo image_tag=${{env.image_tag}}
+          echo "::set-output name=image_tag_used::${{env.image_tag}}"
 
       - name: echo version
         run: |

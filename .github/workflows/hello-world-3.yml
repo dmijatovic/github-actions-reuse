@@ -1,0 +1,24 @@
+name: hello world 3
+
+on:
+  workflow_dispatch:
+
+jobs:
+  hello:
+    name: reuse hallo
+    uses: ./.github/workflows/reusable-hello.yml
+    with:
+      name: Marko Matrovic
+      tag: v1.0.0
+      version: 23
+    secrets:
+      token: ${{secrets.GITHUB_TOKEN}}
+  after_helo:
+    name: use output
+    runs-on: ubuntu-latest
+    needs: hello
+    steps:
+      - name: use return values
+        run: |
+          echo hello_to_name=${{needs.hello.outputs.hello_to_name}}
+          echo image_tag_used=${{needs.hello.outputs.image_tag_used}}
