@@ -12,4 +12,4 @@ jobs:
       tag: v1.0.0
       version: 23
     secrets:
-      github_token: ${{secrets.GITHUB_TOKEN}}
+      token: ${{secrets.GITHUB_TOKEN}}
