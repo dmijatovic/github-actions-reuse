@@ -15,7 +15,8 @@ on:
         required: false
         type: number
     secrets:
-      github_token:
+      # you cannot use github_token it's reserved
+      token:
         required: true
 
 jobs:
@@ -53,4 +54,4 @@ jobs:
 
       - name: echo secret
         run: |
-          echo github_token=${{secrets.github_token}}
+          echo github_token=${{secrets.token}}
