@@ -52,6 +52,6 @@ jobs:
         run: |
           echo version=${{inputs.version}}
 
-      - name: echo secret
+      - name: echo token
         run: |
-          echo github_token=${{secrets.token}}
+          echo token=${{secrets.token}}
