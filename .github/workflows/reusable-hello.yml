@@ -25,7 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     # this shared action produces output to be consumed by users
     outputs:
-      hello_to_name: ${{steps.hello_to.outputs.greet}}
+      hello_to_name: ${{steps.hello_greet.outputs.greet}}
       image_tag_used: ${{steps.return_tag.outputs.image_tag_used}}
     steps:
       - name: checkout
@@ -36,7 +36,7 @@ jobs:
           fetch-depth: 0
 
       - name: say hello to name
-        id: hello_to
+        id: hello_greet
         run: |
           echo hello ${{inputs.name}}
           echo "::set-output name=greet::hello ${{inputs.name}}"
