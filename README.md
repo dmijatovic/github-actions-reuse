@@ -19,4 +19,6 @@ For reusable workflow the action type should be `workflow_call`. You can use oth
 
 ### Outputs
 
-Reusable workflow can produce output and provide it back to workflow it uses. These need to be defined at the level of job.
+Reusable workflow can produce output and provide it back to workflow it uses.
+
+These need to be defined at the level of job AND in workflow_call next to inputs and secrets, otherwise it will not work. I first made error defining outputs only at level of jobs

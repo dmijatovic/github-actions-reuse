@@ -18,9 +18,16 @@ on:
       # you cannot use github_token it's reserved
       token:
         required: true
+    outputs:
+      hello_to_name:
+        description: "Return complete greeting used"
+        value: ${{ jobs.say_hello.outputs.hello_to_name }}
+      image_tag_used:
+        description: "Return image tag used for the image?"
+        value: ${{ jobs.say_hello.outputs.image_tag_used }}
 
 jobs:
-  say-hello:
+  say_hello:
     name: say hello
     runs-on: ubuntu-latest
     # this shared action produces output to be consumed by users
