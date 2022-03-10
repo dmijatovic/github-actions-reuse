@@ -1,0 +1,13 @@
+name: hello world 2
+
+on:
+  workflow_dispatch:
+
+jobs:
+  hello-1:
+    name: echo hello world 2
+    uses: dmijatovic/github-actions-reuse/.github/workflows/reusable-hello.yml@main
+    with:
+      name: Dusan Mijatovic
+    secrets:
+      github_token: ${{secrets.GITHUB_TOKEN}}
