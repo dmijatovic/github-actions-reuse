@@ -6,7 +6,7 @@ on:
 jobs:
   hello-1:
     name: echo hello world 2
-    uses: ./.github/workflows/reusable-hello.yml@main
+    uses: ./.github/workflows/reusable-hello.yml
     with:
       name: Dusan Mijatovic
     secrets:
