@@ -72,9 +72,22 @@ jobs:
    name: stage 5
    needs: [stage_2, stage_4]
    runs-on: ubuntu-latest
+   outputs:
+     next_stage: ${{steps.set_next_stage.outputs.next_state}}
    steps:
     - name: show tags from other stages
       run: |
-        echo tag_from_stage_1=${{needs.stage2.outputs.tag_from_stage_1}}
-        echo tag_from_stage_2=${{needs.stage2.outputs.tag_from_stage_2}}
-        echo tag_from_stage_4=${{needs.stage4.outputs.tag_from_stage_4}}
+        echo tag_from_stage_1=${{needs.stage_2.outputs.tag_from_stage_1}}
+        echo tag_from_stage_2=${{needs.stage_2.outputs.tag_from_stage_2}}
+        echo tag_from_stage_4=${{needs.stage_4.outputs.tag_from_stage_4}}
+    - name: set next stage
+      uses: satackey/action-js-inline@v0.0.2
+      id: set_next_stage
+      with:
+        script: |
+          const core = require('@actions/core')
+          const rand = Math.round(Math.rand() * 100)
+          console.log("rand...", rand)
+          core.setOutput('next_stage', rand > 50 ? 6 : 7)
+    - name: echo next stage
+      run: echo next_stage=${{stage_5.outputs.next_stage}}
