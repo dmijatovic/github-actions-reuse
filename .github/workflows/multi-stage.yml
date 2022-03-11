@@ -90,22 +90,22 @@ jobs:
           console.log("rand...", rand)
           core.setOutput('next_stage', rand > 50 ? 6 : 7)
     - name: echo next stage
-      run: echo next_stage=${{steps.set_next_stage.outputs.next_state}}
+      run: echo next_stage=${{steps.set_next_stage.outputs.next_stage}}
 
   stage_6:
    name: stage 6
    needs: stage_5
    runs-on: ubuntu-latest
-   if: ${{stage_5.outputs.next_stage}}===6
+   if: ${{needs.stage_5.outputs.next_stage}}===6
    steps:
     - name: show received next step
-      run: echo next_stage=${{stage_5.outputs.next_stage}}
+      run: echo next_stage=${{needs.stage_5.outputs.next_stage}}
 
   stage_7:
    name: stage 7
    needs: stage_5
    runs-on: ubuntu-latest
-   if: ${{stage_5.outputs.next_stage}}===7
+   if: ${{needs.stage_5.outputs.next_stage}}===7
    steps:
     - name: show received next step
-      run: echo next_stage=${{stage_5.outputs.next_stage}}
+      run: echo next_stage=${{needs.stage_5.outputs.next_stage}}
