@@ -86,7 +86,7 @@ jobs:
       with:
         script: |
           const core = require('@actions/core')
-          const rand = Math.round(Math.rand() * 100)
+          const rand = Math.round(Math.random() * 100)
           console.log("rand...", rand)
           core.setOutput('next_stage', rand > 50 ? 6 : 7)
     - name: echo next stage
