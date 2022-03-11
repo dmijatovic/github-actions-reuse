@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       tag_from_env: ${{env.image_tag}}
-      tag_from_output: ${{steps.create_output.tag_from_output}}
+      tag_from_output: ${{steps.create_output.outputs.tag_from_output}}
     steps:
       - name: checkout
         # https://github.com/actions/checkout
@@ -33,6 +33,9 @@ jobs:
     name: stage 2 job
     needs: stage_1
     runs-on: ubuntu-latest
+    outputs:
+      tag_from_stage_1: ${{steps.create_output.outputs.tag_from_stage_1}}
+      tag_from_stage_2: ${{steps.create_output.outputs.tag_from_stage_2}}
     steps:
       - name: use env from stage_1
         run: echo image_tag=${{needs.stage_1.env.image_tag}}
@@ -40,18 +43,38 @@ jobs:
         run: |
           echo tag_from_env=${{needs.stage_1.outputs.tag_from_env}}
           echo tag_from_output=${{needs.stage_1.outputs.tag_from_output}}
-
+      - name: pass outputs
+        id: create_output
+        run: |
+          echo "::set-output name=tag_from_stage_1::${{needs.stage_1.outputs.tag_from_env}}"
+          echo "::set-output name=tag_from_stage_2::stage_2-tag"
   stage_3:
-    name: run in parallel with stage_2
+    name: stage 3
     runs-on: ubuntu-latest
     steps:
       - name: list location
         run: ls -lha
 
   stage_4:
-    name: depends on stage_3
+    name: stage 4
     needs: stage_3
     runs-on: ubuntu-latest
+    outputs:
+      tag_from_stage_4: ${{steps.create_output.outputs.tag_from_stage_4}}
     steps:
       - name: list env
         run: env
+      - name: create output tag
+        id: create_output
+        run: echo "::set-output name=tag_from_stage_4::stage_4-tag"
+
+  stage_5:
+   name: stage 5
+   needs: [stage_2, stage_4]
+   runs-on: ubuntu-latest
+   steps:
+    - name: show tags from other stages
+      run: |
+        echo tag_from_stage_1=${{needs.stage2.outputs.tag_from_stage_1}}
+        echo tag_from_stage_2=${{needs.stage2.outputs.tag_from_stage_2}}
+        echo tag_from_stage_4=${{needs.stage4.outputs.tag_from_stage_4}}
