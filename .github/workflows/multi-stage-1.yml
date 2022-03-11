@@ -7,6 +7,9 @@ jobs:
   stage_1:
     name: stage 1 job
     runs-on: ubuntu-latest
+    outputs:
+      tag_from_env: ${{env.image_tag}}
+      tag_from_output: ${{steps.create_output.tag_from_output}}
     steps:
       - name: checkout
         # https://github.com/actions/checkout
@@ -20,6 +23,9 @@ jobs:
         run: echo hello repo
       - name: pass env values
         run: echo "image_tag=latest" >> $GITHUB_ENV
+      - name: create output
+        id: create_output
+        run: echo "::set-output name=tag_from_output::latest-from-output"
       - name: use env in same stage
         run: echo image_tag=${{env.image_tag}}
 
@@ -30,8 +36,10 @@ jobs:
     steps:
       - name: use env from stage_1
         run: echo image_tag=${{needs.stage_1.env.image_tag}}
-      - name: is the repo from stage_1 still here?
-        run: git status
+      - name: use output from stage_1
+        run: |
+          echo tag_from_env=${{needs.stage_1.outputs.tag_from_env}}
+          echo tag_from_output=${{needs.stage_1.outputs.tag_from_output}}
 
   stage_3:
     name: run in parallel with stage_2
