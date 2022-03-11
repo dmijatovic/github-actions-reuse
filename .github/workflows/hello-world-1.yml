@@ -6,7 +6,7 @@ on:
 jobs:
   hello-1:
     name: echo hello world 1
-    uses: ./.github/module/reusable-hello.yml
+    uses: ./.github/workflows/reusable-hello.yml
     with:
       name: Marko Matrovic
       tag: v1.0.0
