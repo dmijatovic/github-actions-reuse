@@ -5,7 +5,7 @@ on:
 
 jobs:
   stage_1:
-    name: stage 1 job
+    name: stage 1
     runs-on: ubuntu-latest
     outputs:
       tag_from_env: ${{env.image_tag}}
@@ -30,7 +30,7 @@ jobs:
         run: echo image_tag=${{env.image_tag}}
 
   stage_2:
-    name: stage 2 job
+    name: stage 2
     needs: stage_1
     runs-on: ubuntu-latest
     outputs:
@@ -93,19 +93,21 @@ jobs:
       run: echo next_stage=${{steps.set_next_stage.outputs.next_stage}}
 
   stage_6:
-   name: stage 6
-   needs: stage_5
-   runs-on: ubuntu-latest
-   if: ${{needs.stage_5.outputs.next_stage}}===6
-   steps:
-    - name: show received next step
-      run: echo next_stage=${{needs.stage_5.outputs.next_stage}}
+    # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idif
+    if: needs.stage_5.outputs.next_stage == 6
+    name: stage 6
+    needs: stage_5
+    runs-on: ubuntu-latest
+    steps:
+      - name: show received next step
+        run: echo next_stage=${{needs.stage_5.outputs.next_stage}}
 
   stage_7:
-   name: stage 7
-   needs: stage_5
-   runs-on: ubuntu-latest
-   if: ${{needs.stage_5.outputs.next_stage}}===7
-   steps:
-    - name: show received next step
-      run: echo next_stage=${{needs.stage_5.outputs.next_stage}}
+    # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idif
+    if: needs.stage_5.outputs.next_stage == 7
+    name: stage 7
+    needs: stage_5
+    runs-on: ubuntu-latest
+    steps:
+      - name: show received next step
+        run: echo next_stage=${{needs.stage_5.outputs.next_stage}}
