@@ -73,7 +73,7 @@ jobs:
    needs: [stage_2, stage_4]
    runs-on: ubuntu-latest
    outputs:
-     next_stage: ${{steps.set_next_stage.outputs.next_state}}
+     next_stage: ${{steps.set_next_stage.outputs.next_stage}}
    steps:
     - name: show tags from other stages
       run: |
@@ -90,4 +90,22 @@ jobs:
           console.log("rand...", rand)
           core.setOutput('next_stage', rand > 50 ? 6 : 7)
     - name: echo next stage
-      run: echo next_stage=${{steps.set_next_stage.outputs.next_state}}
+      run: echo next_stage=${{steps.set_next_stage.outputs.next_state}
+
+  stage_6:
+   name: stage 6
+   needs: stage_5
+   runs-on: ubuntu-latest
+   if: ${{stage_5.outputs.next_stage}}===6
+   steps:
+    - name: show received next step
+      run: echo next_stage=${{stage_5.outputs.next_stage}}
+
+  stage_7:
+   name: stage 7
+   needs: stage_5
+   runs-on: ubuntu-latest
+   if: ${{stage_5.outputs.next_stage}}===7
+   steps:
+    - name: show received next step
+      run: echo next_stage=${{stage_5.outputs.next_stage}}
