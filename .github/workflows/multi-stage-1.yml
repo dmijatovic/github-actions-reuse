@@ -20,13 +20,30 @@ jobs:
         run: echo hello repo
       - name: pass env values
         run: echo "image_tag=latest" >> $GITHUB_ENV
+      - name: use env in same stage
+        run: echo image_tag=${{env.image_tag}}
 
   stage_2:
     name: stage 2 job
     needs: stage_1
     runs-on: ubuntu-latest
     steps:
-      - name: stage2.step1 can access env from state_1
+      - name: use env from stage_1
         run: echo image_tag=${{needs.stage_1.env.image_tag}}
       - name: is the repo from stage_1 still here?
         run: git status
+
+  stage_3:
+    name: run in parallel with stage_2
+    runs-on: ubuntu-latest
+    steps:
+      - name: list location
+        run: ls -lha
+
+  stage_4:
+    name: depends on stage_3
+    needs: stage_3
+    runs-on: ubuntu-latest
+    steps:
+      - name: list env
+        run: env
