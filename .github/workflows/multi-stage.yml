@@ -111,3 +111,19 @@ jobs:
     steps:
       - name: show received next step
         run: echo next_stage=${{needs.stage_5.outputs.next_stage}}
+
+  stage_8:
+    name: stage 8
+    needs: stage_6
+    runs-on: ubuntu-latest
+    steps:
+     - name: say something
+       run: echo stage 6 runned before me
+
+  stage_9:
+    name: stage 9
+    needs: stage_7
+    runs-on: ubuntu-latest
+    steps:
+     - name: say something
+       run: echo stage 7 runned before me
