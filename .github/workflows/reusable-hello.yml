@@ -1,0 +1,72 @@
+name: reusable hello
+
+on:
+  # this defines that workflow is callable from other workflow
+  workflow_call:
+    # these are inputs to be provided to workflow
+    inputs:
+      name:
+        required: true
+        type: string
+      tag:
+        required: false
+        type: string
+      version:
+        required: false
+        type: number
+    secrets:
+      # you cannot use github_token it's reserved
+      token:
+        required: true
+    outputs:
+      hello_to_name:
+        description: "Return complete greeting used"
+        value: ${{ jobs.say_hello.outputs.hello_to_name }}
+      image_tag_used:
+        description: "Return image tag used for the image?"
+        value: ${{ jobs.say_hello.outputs.image_tag_used }}
+
+jobs:
+  say_hello:
+    name: say hello
+    runs-on: ubuntu-latest
+    # this shared action produces output to be consumed by users
+    outputs:
+      hello_to_name: ${{steps.hello_greet.outputs.greet}}
+      image_tag_used: ${{steps.return_tag.outputs.image_tag_used}}
+    steps:
+      - name: checkout
+        # https://github.com/actions/checkout
+        uses: actions/checkout@v3
+        with:
+          # checkout complete history
+          fetch-depth: 0
+
+      - name: say hello to name
+        id: hello_greet
+        run: |
+          echo hello ${{inputs.name}}
+          echo "::set-output name=greet::hello ${{inputs.name}}"
+
+      - name: contruct image tag
+        run: |
+          if [ -z "${{inputs.tag}}" ]
+          then
+            echo "image_tag=latest" >> $GITHUB_ENV
+          else
+            echo "image_tag=${{inputs.tag}}" >> $GITHUB_ENV
+          fi
+
+      - name: echo image_tag from previous step
+        id: return_tag
+        run: |
+          echo image_tag=${{env.image_tag}}
+          echo "::set-output name=image_tag_used::${{env.image_tag}}"
+
+      - name: echo version
+        run: |
+          echo version=${{inputs.version}}
+
+      - name: echo token
+        run: |
+          echo token=${{secrets.token}}
