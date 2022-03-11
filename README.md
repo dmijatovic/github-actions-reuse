@@ -11,7 +11,7 @@ Official documentation can be [found here](https://docs.github.com/en/actions/us
 
 Usefull video is [thisone](https://www.youtube.com/watch?v=lRypYtmbKMs)
 
-Note! The workflows cannot be in 
+Note! The workflows cannot be at some other location other that the root of workflows folder. So the only location to have reusable workflows is ./.github/workflows. On the other hand shared workflows can reside in a different repository. To use them that repo need to have checkbox set to allow using the workflows by other repos.
 
 ### Summary
 
